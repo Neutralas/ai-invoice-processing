@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: invoice-processing-postgres
+    environment:
+      POSTGRES_DB: invoice_processing
+      POSTGRES_USER: invoice_app
+      POSTGRES_PASSWORD: invoice_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
