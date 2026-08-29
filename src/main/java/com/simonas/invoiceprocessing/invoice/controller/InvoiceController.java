@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for invoice processing operations.
+ */
 @RestController
 @RequestMapping("/api/v1/invoices")
 public class InvoiceController {
@@ -19,6 +22,12 @@ public class InvoiceController {
         this.invoiceProcessingService = invoiceProcessingService;
     }
 
+    /**
+     * Processes an invoice document and returns the resulting workflow decision.
+     *
+     * @param processInvoiceRequest the invoice document submitted for processing
+     * @return the processed invoice result
+     */
     @PostMapping("/process")
     public InvoiceResponse process(
             @Valid @RequestBody ProcessInvoiceRequest processInvoiceRequest) {
