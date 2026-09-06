@@ -1,6 +1,7 @@
 package com.simonas.invoiceprocessing.invoice.validation;
 
 import com.simonas.invoiceprocessing.invoice.dto.ExtractedInvoice;
+import org.springframework.stereotype.Component;
 
 /**
  * Validates domain-level rules for extracted invoice data.
@@ -8,6 +9,7 @@ import com.simonas.invoiceprocessing.invoice.dto.ExtractedInvoice;
  * <p>Field-level validation is handled by Jakarta Bean Validation.
  * This validator handles rules that depend on multiple invoice fields.</p>
  */
+@Component
 public class InvoiceValidator {
 
     /**
