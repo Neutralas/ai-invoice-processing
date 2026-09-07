@@ -5,6 +5,7 @@ import com.simonas.invoiceprocessing.invoice.domain.DecisionReason;
 import com.simonas.invoiceprocessing.invoice.domain.InvoiceStatus;
 import com.simonas.invoiceprocessing.invoice.dto.InvoiceResponse;
 import com.simonas.invoiceprocessing.invoice.dto.ProcessInvoiceRequest;
+import com.simonas.invoiceprocessing.invoice.exception.AiServiceUnavailableException;
 import com.simonas.invoiceprocessing.invoice.service.InvoiceProcessingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,5 +92,25 @@ class InvoiceControllerTest {
 
         verify(invoiceProcessingService, never())
                 .process(any(ProcessInvoiceRequest.class));
+    }
+
+    @Test
+    void shouldReturn503WhenAiServiceIsUnavailable() throws Exception {
+        when(invoiceProcessingService.process(any(ProcessInvoiceRequest.class)))
+                .thenThrow(new AiServiceUnavailableException(
+                        "Invoice extraction service is unavailable"));
+
+        mockMvc.perform(post("/api/v1/invoices/process")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                            {
+                                "documentText": "Invoice from Example GmbH"
+                            }
+                            """))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().string(
+                        "Invoice extraction service is unavailable"));
+
+        verify(invoiceProcessingService).process(any(ProcessInvoiceRequest.class));
     }
 }

@@ -1,6 +1,7 @@
 package com.simonas.invoiceprocessing.invoice.ai;
 
 import com.simonas.invoiceprocessing.invoice.dto.ExtractedInvoice;
+import com.simonas.invoiceprocessing.invoice.exception.AiServiceUnavailableException;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Component;
 
@@ -35,11 +36,18 @@ public class LlmInvoiceExtractor implements InvoiceExtractor {
                 Extract the invoice total, not individual line-item amounts.
                 """;
 
-        return chatClient.prompt()
-                .system(system)
-                .user(documentText)
-                .call()
-                .entity(ExtractedInvoice.class,
-                        spec -> spec.useProviderStructuredOutput());
+        try {
+            return chatClient.prompt()
+                    .system(system)
+                    .user(documentText)
+                    .call()
+                    .entity(ExtractedInvoice.class,
+                            spec -> spec.useProviderStructuredOutput());
+        } catch (Exception exception) {
+            throw new AiServiceUnavailableException(
+                    "Invoice extraction service is unavailable",
+                    exception);
+        }
+
     }
 }
