@@ -2,11 +2,9 @@ package com.simonas.invoiceprocessing.invoice.ai;
 
 import com.simonas.invoiceprocessing.invoice.dto.ExtractedInvoice;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-@Primary
 public class LlmInvoiceExtractor implements InvoiceExtractor {
 
     private final ChatClient chatClient;
